@@ -1,12 +1,12 @@
 * 1st
 
-  ```py
-CREATE TABLE DP (
-dept_no INT PRIMARY KEY,
-dept_name VARCHAR(50) NOT NULL UNIQUE,
-location VARCHAR(50)
+```py
+ CREATE TABLE DP (
+ dept_no INT PRIMARY KEY,
+ dept_name VARCHAR(50) NOT NULL UNIQUE,
+ location VARCHAR(50)
 );
- 
+
 DESC DP;
 
 INSERT INTO DP VALUES (10, 'Account', 'NY');
@@ -28,5 +28,6 @@ SELECT * FROM DP WHERE dept_name LIKE 'A%';
 SELECT * FROM DP WHERE dept_no BETWEEN 1 AND 100;
 
 DELETE FROM DP WHERE dept_name = 'TRG';
-```
+
 UPDATE DP SET dept_name = 'IT' WHERE dept_name = 'EDP';
+```
