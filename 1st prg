@@ -6,7 +6,7 @@ dept_no INT PRIMARY KEY,
 dept_name VARCHAR(50) NOT NULL UNIQUE,
 location VARCHAR(50)
 );
- 
+ ```
 DESC DP;
 
 INSERT INTO DP VALUES (10, 'Account', 'NY');
