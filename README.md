@@ -1,6 +1,7 @@
 * 1st
+
   ```py
-  CREATE TABLE DP (
+CREATE TABLE DP (
 dept_no INT PRIMARY KEY,
 dept_name VARCHAR(50) NOT NULL UNIQUE,
 location VARCHAR(50)
