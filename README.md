@@ -32,6 +32,7 @@ SELECT * FROM DP WHERE dept_name LIKE 'A%';
 ```py
 SELECT * FROM DP WHERE dept_no BETWEEN 1 AND 100;
 ```
+```
 ```py
 DELETE FROM DP WHERE dept_name = 'TRG';
 ```
