@@ -1,11 +1,10 @@
-```py
+
 CREATE TABLE c1 (
 courseno INT PRIMARY KEY,
  coursename VARCHAR(100) NOT NULL,
 max_marks INT CHECK (max_marks > 0), 
 pass_marks INT CHECK (pass_marks > 0 AND pass_marks <= max_marks)
 );
-```
 CREATE TABLE SE (
     rollno INT,
     courseno INT,
@@ -58,4 +57,4 @@ JOIN se sc ON s.rollno = sc.rollno GROUP BY s.rollno, s.name;
 9th
 SELECT * FROM cr WHERE pass_marks > (max_marks * 0.3);
 
-```
+
