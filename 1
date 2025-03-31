@@ -5,7 +5,7 @@ courseno INT PRIMARY KEY,
 max_marks INT CHECK (max_marks > 0), 
 pass_marks INT CHECK (pass_marks > 0 AND pass_marks <= max_marks)
 );
-
+```
 CREATE TABLE SE (
     rollno INT,
     courseno INT,
