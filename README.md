@@ -232,3 +232,73 @@ WHERE MONTH(birth_date) = MONTH(CURRENT_DATE());
 8
 SELECT * FROM EMPLOYEE;
 ```
+```py
+CREATE TABLE c1 (
+courseno INT PRIMARY KEY,
+ coursename VARCHAR(100) NOT NULL,
+max_marks INT CHECK (max_marks > 0), 
+pass_marks INT CHECK (pass_marks > 0 AND pass_marks <= max_marks)
+);
+
+CREATE TABLE SE (
+    rollno INT,
+    courseno INT,
+    marks INT CHECK (marks BETWEEN 0 AND 100),
+    PRIMARY KEY (rollno, courseno),
+    FOREIGN KEY (rollno) REFERENCES sd(rollno) ON DELETE CASCADE,
+    FOREIGN KEY (courseno) REFERENCES cr (courseno) ON DELETE CASCADE
+);
+
+CREATE TABLE SC (rollno INT, 
+courseno INT,
+marks INT CHECK (marks BETWEEN 0 AND 100),
+PRIMARY KEY (rollno, courseno),
+FOREIGN KEY (rollno) REFERENCES ST(rollno) ON DELETE CASCADE,
+FOREIGN KEY (courseno) REFERENCES CU (courseno) ON DELETE CASCADE ); 
+
+insert into ST values (1, 'Alice', 'MCA', '10-MAY-1998');
+insert into ST values (2, 'Bob', 'MCA', '15-AUG-1997');
+insert into ST values (3, 'Charlie', 'BSc', '20-FEB-1999');
+insert into ST values (4, 'viresh', 'BCA', '21-nov-2010');
+insert into ST values (5,'satu','msc','24-dec-2011');
+
+insert into CU values(101, 'dbms',100,45);
+insert into CU values(102, 'os',100,35);
+insert into CU values(103, 'ds',100,75);
+insert into CU values(104, 'python',100,60);
+insert into CU values(105, 'se',100,50);
+
+insert into SC values (1,101,50);
+insert into SC values (2,102,45);
+insert into SC values (3,103,66);
+insert into SC values (4,104,77);
+insert into SC values (5,105,81);
+insert into SC values (6,106,43);
+3//
+
+(Already added in the SC table using CHECK (marks BETWEEN 0 AND 100))
+
+4**
+SELECT s.rollno, s.name, s.class, s.birthdate, c.coursename, sc.marks
+FROM sd s
+JOIN se sc ON s.rollno = sc.rollno
+JOIN cr c ON sc.courseno = c.courseno
+WHERE c.coursename = 'dbms';
+5**
+SELECT s.rollno, s.name 
+FROM sd s
+JOIN se sc ON s.rollno = sc.rollno
+JOIN cr c ON sc.courseno = c.courseno
+WHERE c.coursename = 'Computer Networks' AND sc.marks > (c.max_marks * 0.7)AND s.rollno NOT IN (
+    SELECT sc.rollno 
+    FROM se sc
+    JOIN cr c ON sc.courseno = c.courseno 
+    WHERE sc.marks < c.pass_marks
+);
+8th
+SELECT s.rollno, s.name, AVG(sc.marks) AS avg_marks FROM sd s
+JOIN se sc ON s.rollno = sc.rollno GROUP BY s.rollno, s.name;
+9th
+SELECT * FROM cr WHERE pass_marks > (max_marks * 0.3);
+
+```
