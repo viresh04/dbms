@@ -40,94 +40,66 @@ UPDATE DP SET dept_name = 'IT' WHERE dept_name = 'EDP';
 ```
 # 2ND PRG
 ```PY
--- 1. Create the Database
-CREATE DATABASE COMPANY;
-USE COMPANY;
-
--- 2. Create the DEPART Table
-CREATE TABLE DEPART (
+CREATE TABLE DP (
     dept_no INT PRIMARY KEY,
-    dept_name VARCHAR(50) NOT NULL,
-    total_employees INT CHECK(total_employees >= 0),
-    location VARCHAR(50)
+    dept_name VARCHAR(50) UNIQUE,
+    location VARCHAR(100)
 );
 
--- 3. Create the EMPLOYEE Table
-CREATE TABLE EMPLOYEE (
-    emp_id INT PRIMARY KEY,
-    emp_name VARCHAR(50) NOT NULL,
-    birth_date DATE,
-    gender VARCHAR(10) CHECK(gender IN ('Male', 'Female')),
+CREATE TABLE EY  (
+ emp_id INT PRIMARY KEY,
+    emp_name VARCHAR2(50) NOT NULL,
+    birth_date DATE NOT NULL,
+    gender VARCHAR2(10) CHECK (gender IN ('Male', 'Female')) NOT NULL,
     dept_no INT,
-    address VARCHAR(100),
-    designation VARCHAR(50),
-    salary DECIMAL(10, 2),
-    experience INT,
-    email VARCHAR(100) UNIQUE,
-    FOREIGN KEY (dept_no) REFERENCES DEPART(dept_no)
+    address VARCHAR2(255),
+designation VARCHAR2(20) CHECK (designation IN ('Manager', 'Clerk', 'Leader', 'Analyst', 'Designer', 'Coder', 'Tester')) NOT NULL,   
+ salary DECIMAL(10,2) CHECK (salary > 0),
+    experience INT CHECK (experience >= 0),
+    email VARCHAR(100) NOT NULL CHECK (email LIKE '%@%.%'),
+    FOREIGN KEY (dept_no) REFERENCES DP(dept_no)
 );
 
--- 4. Create the PROJECT Table
-CREATE TABLE PROJECT (
-    proj_id INT PRIMARY KEY,
-    type_of_project VARCHAR(50),
-    status VARCHAR(20),
-    start_date DATE,
-    emp_id INT,
-    FOREIGN KEY (emp_id) REFERENCES EMPLOYEE(emp_id)
-);
+INSERT INTO  DP VALUES (10, 'Accounts', 'NY');
+INSERT INTO  DP VALUES(20, 'HR', 'NY');
+INSERT INTO  DP VALUES(30, 'Production', 'DL');
+INSERT INTO  DP VALUES(40, 'Sales', 'NY');
+INSERT INTO  DP VALUES(50, 'IT', 'MU');
 
--- 5. Insert Data into DEPART
-INSERT INTO DEPART VALUES (101, 'CIVIL', 3, 'Delhi');
-INSERT INTO DEPART VALUES (102, 'MCA', 5, 'Mumbai');
-INSERT INTO DEPART VALUES (103, 'MECH', 1, 'Chennai');
+INSERT INTO EY VALUES(101, 'Alice', TO_DATE('12-MAY-1990', 'Female', 10, '123 Main St', 'Manager', 60000, 10, 'alice@example.com');
+INSERT INTO EY VALUES(102, 'Bob', '23-SEP-1995', 'Male', 20, '456 Elm St', 'Clerk', 35000, 5, 'bob@example.com');
+INSERT INTO EY VALUES(103, 'Charlie', TO_DATE('11-FEB-1998', 'DD-MON-YYYY'), 'Male', 30, '789 Oak St', 'Analyst', 45000, 3, 'charlie@example.com');
+INSERT INTO EY VALUES(104, 'David', TO_DATE('30-JUL-2000', 'DD-MON-YYYY'), 'Male', 40, '321 Maple St', 'Coder', 40000, 2, 'david@example.com');
+INSERT INTO EY VALUES(105, 'Eve', TO_DATE('15-OCT-1992', 'DD-MON-YYYY'), 'Female', 50, '654 Pine St', 'Designer', 50000, 8, 'eve@example.com');
 
--- 6. Insert Data into EMPLOYEE
-INSERT INTO EMPLOYEE VALUES (1, 'Anita', '1995-03-10', 'Female', 102, 'Delhi', 'Manager', 55000, 5, 'anita@gmail.com');
-INSERT INTO EMPLOYEE VALUES (2, 'Akash', '1997-07-15', 'Male', 101, 'Mumbai', 'Engineer', 45000, 3, 'akash@gmail.com');
-INSERT INTO EMPLOYEE VALUES (3, 'Asha', '1996-03-22', 'Female', 102, 'Chennai', 'Analyst', 40000, 2, 'asha@gmail.com');
-INSERT INTO EMPLOYEE VALUES (4, 'Rahul', '1998-02-12', 'Male', 103, 'Delhi', 'Supervisor', 30000, 1, 'rahul@gmail.com');
-INSERT INTO EMPLOYEE VALUES (5, 'Amara', '1994-03-05', 'Female', 101, 'Mumbai', 'Engineer', 47000, 4, 'amara@gmail.com');
 
--- 7. Insert Data into PROJECT
-INSERT INTO PROJECT VALUES (201, 'Bridge Construction', 'Ongoing', '2024-01-10', 1);
-INSERT INTO PROJECT VALUES (202, 'Software Development', 'Completed', '2023-09-15', 3);
-INSERT INTO PROJECT VALUES (203, 'Road Construction', 'Ongoing', '2024-02-20', 2);
+DESC DP;
+DESC EY;
 
--- 8. Delete the department whose total number of employees is less than 1
-DELETE FROM DEPART WHERE total_employees < 1;
+SELECT * FROM EY ORDER BY emp_name ASC;
+SELECT * FROM DP ORDER BY dept_name ASC; 
 
--- 9. Display names and designation of all female employees in descending order
-SELECT emp_name, designation
-FROM EMPLOYEE
-WHERE gender = 'Female'
-ORDER BY emp_name DESC;
 
--- 10. Display employees whose name starts with 'A' and ends with 'A'
-SELECT emp_name
-FROM EMPLOYEE
-WHERE emp_name LIKE 'A%A';
+DELETE FROM DP WHERE location = 'Ahmedabad';
 
--- 11. Find employee with minimum salary
-SELECT emp_name, salary
-FROM EMPLOYEE
-WHERE salary = (SELECT MIN(salary) FROM EMPLOYEE);
+SELECT * FROM EY WHERE gender = 'Female';
 
--- 12. Increase salary by 10% for employees in the 'CIVIL' department
-UPDATE EMPLOYEE
+SELECT d.dept_name, e.emp_name FROM EY e
+JOIN DP d ON e.dept_no = d.dept_no ORDER BY d.dept_name;
+
+SELECT emp_name FROM EY WHERE salary BETWEEN 20000 AND 50000;
+
+SELECT emp_name, designation FROM EY WHERE gender = 'Female' ORDER BY emp_name DESC;
+
+SELECT emp_name FROM EY WHERE emp_name LIKE 'A%A';
+
+SELECT emp_name, salary FROM EY
+WHERE salary = (SELECT MIN(salary) FROM EY);
+
+UPDATE EY
 SET salary = salary * 1.10
-WHERE dept_no = (SELECT dept_no FROM DEPART WHERE dept_name = 'CIVIL');
-
--- 13. Count total number of employees in 'MCA' department
-SELECT COUNT(*)
-FROM EMPLOYEE
-WHERE dept_no = (SELECT dept_no FROM DEPART WHERE dept_name = 'MCA');
-
--- 14. List employees born in the current month
-SELECT emp_name, birth_date
-FROM EMPLOYEE
-WHERE MONTH(birth_date) = MONTH(CURDATE());
-
+WHERE dept_no = (SELECT dept_no FROM DP WHERE dept_name = 'IT');
+    
 ```
 # 4th one
 ```py
