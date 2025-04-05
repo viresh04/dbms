@@ -206,46 +206,46 @@ SELECT * FROM EMPLOYEE;
 ```
 ##3RD PRG 
 ```py
-CREATE TABLE STUDENT (
-rollno INT PRIMARY KEY,
-name VARCHAR(100) NOT NULL,
+CREATE TABLE STD ( 
+ rollno INT PRIMARY KEY,
+name VARCHAR(100) NOT NULL, 
 class VARCHAR(20) NOT NULL,
 birthdate DATE NOT NULL
 );
 
 
-CREATE TABLE COURSE (
+CREATE TABLE CO (
 courseno INT PRIMARY KEY, coursename VARCHAR(100) NOT NULL,
 max_marks INT CHECK (max_marks > 0), pass_marks INT,
 CHECK (pass_marks > 0 AND pass_marks <= max_marks)
 );
 
 CREATE TABLE SC (
-rollno INT,
-courseno INT,
-marks INT CHECK (marks BETWEEN 0 AND 100),
-PRIMARY KEY (rollno, courseno),
-FOREIGN KEY (rollno) REFERENCES STUDENT(rollno) ON DELETE CASCADE,
-FOREIGN KEY (courseno) REFERENCES COURSE(courseno) ON DELETE CASCAD ); 
+    rollno INT,
+    courseno INT,
+    marks INT CHECK (marks BETWEEN 0 AND 100),
+    PRIMARY KEY (rollno, courseno),
+    FOREIGN KEY (rollno) REFERENCES STD(rollno) ON DELETE CASCADE,
+    FOREIGN KEY (courseno) REFERENCES CO(courseno) ON DELETE CASCADE
+);
 
-insert into STUDENT values (1, 'Alice', 'MCA', '10-MAY-1998');
-insert into STUDENT values (2, 'Bob', 'MCA', '15-AUG-1997');
-insert into STUDENT values (3, 'Charlie', 'BSc', '20-FEB-1999');
-insert into STUDENT values (4, 'viresh', 'BCA', '21-nov-2010');
-insert into STUDENT values (5,'satu','msc','24-dec-2011');
+insert into STD values (1, 'Alice', 'MCA', '10-MAY-1998');
+insert into STD values (2, 'Bob', 'MCA', '15-AUG-1997');
+insert into STD values (3, 'Charlie', 'BSc', '20-FEB-1999');
+insert into STD values (4, 'viresh', 'BCA', '21-nov-2010');
+insert into STD values (5,'satu','msc','24-dec-2011');
 
-insert into COURSE values(101, 'dbms',100,45);
-insert into COURSE values(102, 'os',100,35);
-insert into COURSE values(103, 'ds',100,75);
-insert into COURSE values(104, 'python',100,60);
-insert into COURSE values(105, 'se',100,50);
+insert into CO values(101, 'dbms',100,45);
+insert into CO values(102, 'os',100,35);
+insert into CO values(103, 'ds',100,75);
+insert into CO values(104, 'python',100,60);
+insert into CO values(105, 'se',100,50);
 
-insert into SC values (1,	101,	85);
-insert into SC values(1,	102,	72);
-insert into SC values (2,101,66);
-insert into SC values (3,104,77);
-insert into SC values (3,105,81);
-insert into SC values (4,103,81);
+insert into SC values (1,101,50);
+insert into SC values (2,102,45);
+insert into SC values (3,103,66);
+insert into SC values (4,104,77);
+insert into SC values (5,105,81);
 
 3//
 
@@ -256,23 +256,22 @@ SELECT s.rollno, s.name, s.class, s.birthdate, c.coursename, sc.marks
 FROM STUDENT s
 JOIN SC sc ON s.rollno = sc.rollno
 JOIN COURSE c ON sc.courseno = c.courseno
-WHERE c.coursename = '  DBMS'
+WHERE c.coursename = 'Database Management System';
 
-5**
-SELECT s.rollno, s.name FROM STUDENT s
+SELECT s.rollno, s.name 
+FROM STUDENT s
 JOIN SC sc ON s.rollno = sc.rollno
 JOIN COURSE c ON sc.courseno = c.courseno
- 
 WHERE c.coursename = 'Computer Networks' AND sc.marks > (c.max_marks * 0.7)
 AND s.rollno NOT IN (
-SELECT sc.rollno FROM SC sc
-JOIN COURSE c ON sc.courseno = c.courseno WHERE sc.marks < c.pass_marks
+    SELECT sc.rollno 
+    FROM SC sc
+    JOIN COURSE c ON sc.courseno = c.courseno 
+    WHERE sc.marks < c.pass_marks
 );
-
 8th
 SELECT s.rollno, s.name, AVG(sc.marks) AS avg_marks FROM STUDENT s
 JOIN SC sc ON s.rollno = sc.rollno GROUP BY s.rollno, s.name;
-
 9th
 SELECT * FROM COURSE WHERE pass_marks > (max_marks * 0.3);
 
